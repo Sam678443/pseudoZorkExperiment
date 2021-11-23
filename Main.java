@@ -26,12 +26,13 @@ class Main {
     System.out.println("\tDUNGEON MASTERS\n\n\tWelcome to the game!");
     System.out.println("\tHave you played before? y/n");
     String newUser = in.nextLine();
-    if(newUser.equals("n"))
+    //Determining whether to send user to tutorial or not
+    if(newUser.equals("n")||newUser.equals("no"))
     {
       playerLocation = 0;      
     }
 
-    else if(newUser.equals("y"))
+    else if(newUser.equals("y")||newUser.equals("yes"))
     {
       System.out.println("Welcome back!");
       playerLocation = 1;
@@ -50,12 +51,13 @@ class Main {
 
       switch(playerLocation)
       {
+        //The Tutorial Level
         case 0:
           if(playerInput.contains("Fight")||playerInput.contains("fight"))
           {
-            System.out.println("\t#This is a skeleton. The battle sequences are largely based on randomized attack for both.#\n\t#Some speak of a magical sword that enlightens even the darkest room lies in the dungeon...#");
+            System.out.println("\t#This is a skeleton.#\n\t#The battle sequences are largely based on randomized attack for both.#\n\t#Some speak of a magical sword that enlightens even the darkest room lies in the dungeon...#");
             enemyBattle(0);
-            System.out.println("Good luck in the dungeon! If you dare enter...");
+            System.out.println(">>Good luck in the dungeon! If you dare enter...<<");
             playerLocation ++;
           }
 
@@ -94,8 +96,11 @@ class Main {
           {
             System.out.print(">>Invalid Command<<");
           }
+
+          health = 100;
           break;
         
+        //The Entrance
         case 1:
           if(playerInput.contains("Enter")||playerInput.contains("enter"))
           {
@@ -120,6 +125,7 @@ class Main {
           }
           break;
         
+        //The Hallway
         case 2:
           if(playerInput.contains("room 1")||playerInput.contains("Room 1"))
           {
@@ -142,11 +148,14 @@ class Main {
               System.out.println("\t#You unsheath your sword, suddenly feeling calmer#\n\t#To your awe the statue begins to move#\n\t#The stone crumbles and reveals a knight!#\n\t#The stone knight lunges at you!#");
               enemyBattle(4);
               System.out.println("\t#The stone knight begins to crumble to pieces#\n\t#He mutters something about his master#\n\t#As his head crumbles he looks up at you, hopeless#\n\t#'Why?' he asks as he finally turns to dust#\n\t#You smile and venture on, bloodthirsty#");
+              playerLocation++;
+              playerLocation++;
+              playerLocation++;
             }
 
             else
             {
-              System.out.println("#The door is blocked by a large statue!#");
+              System.out.println("\t#The door is blocked by a large statue!#");
             }
           }
 
@@ -155,11 +164,13 @@ class Main {
             System.out.println("\t#You slowly open the door#\n\t#A warrior jumps out of the shadows!#");
             enemyBattle(2);
             System.out.println("\t#The warrior dropped a key!#");
+            System.out.println("\t#The warrior dropped a trophy!#");
             dungeonKey = true;
             playerLocation++;
           }
           break;
         
+        //Room 3
         case 3:
           if(playerInput.contains("Trophy")||playerInput.contains("trophy"))
           { 
@@ -170,13 +181,21 @@ class Main {
             }
             else
             {
-              System.out.println("#You have already taken this trophy#");
+              System.out.println("#\tYou have already taken this trophy#");
             }
           }
           
           else if(playerInput.contains("Exit")||playerInput.contains("exit"))
-          {
-            playerLocation--;
+          { 
+            if(trophies < 2)
+            {
+              System.out.println("\t#You should really take the trophy#");
+            }
+
+            else
+            {
+              playerLocation--;
+            }
           }
 
           else
@@ -185,29 +204,43 @@ class Main {
           }
           break;
 
+        //Room 1
         case 4:
           enemyBattle(3);
           System.out.println("\t#You finish slaying the first monster#\n\t#You scowl at the second monster#\n\t#Although seemingly impossible the monster sheds a tear#\n\t#He howls in sadness and lunges at you for revenge#");
           enemyBattle(3);
+          System.out.println("#The left one dropped a trophy!#");
+          trophies++;
           System.out.println("\t#Having defeated the twins you lay tired#\n\t#Your vision becomes blurry facing the roof#\n\t#A man in a lab coat looks over you smiling#\n\t#You feel a pinch in your arm and fall fast asleep#\n\n\n\t#You wake up in a fountain with a sword in your hand#\n\t#You feel rejuvunated and ready to fight#\n\t#How strange...#");
+          health = 100;
+          dungeonSword = true;
           playerLocation--;
           playerLocation--;
           break;
 
+        //Room 2
         case 5:
-          break;
+          if(playerInput.contains("Fight")||playerInput.contains("fight"))
+          {
+            enemyBattle(5);
+            System.out.println("\t>>Mahir has been defeated<<\n\t#He falls to the ground and drops two trophies#");
+            trophies++;
+            trophies++;
+            System.out.println("\t#You defeated the Dungeon#\n\t#You have gathered all 5 trophies!#\n\t#You are known far and wide for your deeds#\n\t#Are you the hero or the villain?#\n\n\tGAME OVER");
+            System.exit(0);
+          }
 
-        case 6:
-          break;
-        
-        case 7:
+          else if(playerInput.contains("Run")||playerInput.contains("run"))
+          {
+            System.out.println("\t#You try to run but are stuck in place#\n\t#One of you will die tonight#");
+          }
           break;
       }
-
     }
  }
 
-public static void roomDescription(int roomNumber) 
+  //Function to output description automatically with entrance to room
+  public static void roomDescription(int roomNumber) 
   {   
     //Custom function to display room and the options for player.
 
@@ -220,28 +253,25 @@ public static void roomDescription(int roomNumber)
     description[2] = "\t#You now face three different rooms#\n\t#You can feel a sinister aura coming from all three#";
     description[3]  = "\t#The room is cold and empty#\n\t#You see a lone trophy on a shelf#\n\t";
     description[4] = "\t#You enter the room to find two monsters#\n\t#Two green, large slime monsters face you#\n\t#They roar in unison and jump at you#";
-    description[5] = "\t#You enter the third room to the sight of a man in a lab coat#\n\t#He whistles away carefree as he tinkers with viles#\n\t#You approach him slowly remembering him fuzzily#\n\t";
-    description[6] = "Merchant shack";
-    description[7] = "Trophy room";
-    description[8] = "Lab";
-
+    description[5] = "\t#You enter the third room to the sight of a man in a lab coat#\n\t#He whistles away carefree as he tinkers with viles#\n\t#You approach him slowly remembering him fuzzily#\n\n\n\tYou: You're that guy aren't you, the guy I saw when I was sleeping.\n\n\tLab Coat Guy: Yes yes, the names Mahir kid.\nMahir: You seem to be pretty strong if you're this far\n\n\tYou: Well, to be honest I didn't have much of a hard time you know...\n\tMahir: Ah, I see... Why are you here if I may ask?\nMahir: You have disturbed our peaceful home and killed my friends.\n\n\tYou: I don't really know how...\nI just started in here.\n\n\tMahir: How underwhelming...\nYour death is guaranteed!";
     String[] options = new String[9];
     options[0] = "Fight, Restore HP, Cry, Exit";
     options[1] = "Enter, Exit";
     options[2] = "Room 1, Room 2, Room 3";
     options[3] = "Take trophy, Exit room";
     options[4] = "Fight left one, Fight right one";
-    options[5] = "";
+    options[5] = "Fight Mahir, Run,";
 
-    System.out.println(description[roomNumber]);
+    System.out.println("-------------------------------------------------\n" + description[roomNumber] + "\n-------------------------------------------------");
     String message = String.format("\n\tWhat would you like to do? The options are: %s", options[roomNumber]);
     System.out.println(message);
 
   }
 
- public static void enemyBattle(int enemyNumber)
- { 
-    String[] enemies = {"Skeleton", "Lizard-Man", "Warrior", "Sludge Twin", "Stone Knight"};
+  //Function for battle sequences
+  public static void enemyBattle(int enemyNumber)
+  { 
+    String[] enemies = {"Skeleton", "Lizard-Man", "Warrior", "Sludge Twin", "Stone Knight", "Mahir"};
     boolean running = true;
 
     GAME:
@@ -251,6 +281,10 @@ public static void roomDescription(int roomNumber)
 
       int enemyHealth = rand.nextInt(maxEnemyHealth);
       String enemy = enemies[enemyNumber];
+      if("Mahir" == enemy)
+      {
+        enemyHealth = 80;
+      }
       
       System.out.println("\t# " + enemy + " has appeared! #\n");
 
@@ -282,7 +316,7 @@ public static void roomDescription(int roomNumber)
 
             if(health < 1) 
             {
-              System.out.println("\t#The world goes dark around you...#");
+              System.out.println("\t#The world goes dark around you...#\n\t>>GAME OVER<<");
               System.exit(0);
               break;
             }
@@ -311,6 +345,17 @@ public static void roomDescription(int roomNumber)
             if(dungeonSword == true)
             {
               damageDealt = 30;
+              damageTaken = rand.nextInt(enemyAttackDamage);
+
+              enemyHealth -= damageDealt;
+              health-= damageTaken;
+
+              System.out.println("\t> You strike the " + enemy + " for " + damageDealt + " damage.");
+              System.out.println("\tThe " + enemy + " retaliates and deals " + damageTaken + "!!");
+            }
+            else
+            {
+              System.out.println("ERROR");
             }
             break;
 
@@ -342,5 +387,5 @@ public static void roomDescription(int roomNumber)
     }
 
 
-  }
-}
+   }
+ }
